@@ -17,7 +17,9 @@
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "fluent-ffmpeg": "^2.1.2",
-    "youtube-dl-exec": "^2.5.7"
+    "youtube-dl-exec": "^2.5.7",
+    "openai": "^4.0.0",
+    "express-rate-limit": "^6.7.0"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",

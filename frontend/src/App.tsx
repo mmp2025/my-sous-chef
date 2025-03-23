@@ -3,15 +3,25 @@ import Header from './components/Header/Header';
 import YouTubeInput from './components/YouTubeInput/YouTubeInput';
 import styles from './App.module.css';
 
+interface Ingredient {
+  name: string;
+  quantity?: string;
+  unit?: string;
+  notes?: string;
+}
+
 interface TranscriptionStatus {
   status: 'queued' | 'processing' | 'completed' | 'error';
   text: string;
   error?: string;
   id?: string;
+  ingredients?: Ingredient[];
+  isExtractingIngredients?: boolean;
 }
 
 const App: React.FC = () => {
   const [transcript, setTranscript] = useState<TranscriptionStatus | null>(null);
+  const [selectedIngredients, setSelectedIngredients] = useState<Set<string>>(new Set());
 
   // Poll for transcription status
   useEffect(() => {
@@ -43,6 +53,18 @@ const App: React.FC = () => {
     };
   }, [transcript?.id, transcript?.status]);
 
+  const toggleIngredient = (name: string) => {
+    setSelectedIngredients(prev => {
+      const next = new Set(prev);
+      if (next.has(name)) {
+        next.delete(name);
+      } else {
+        next.add(name);
+      }
+      return next;
+    });
+  };
+
   return (
     <div className={styles.app}>
       <Header />
@@ -66,7 +88,35 @@ const App: React.FC = () => {
           <section className={styles.column}>
             <h2>Ingredients</h2>
             <div className={styles.content}>
-              <p className={styles.placeholder}>No ingredients yet</p>
+              {!transcript?.ingredients && !transcript?.isExtractingIngredients && (
+                <p className={styles.placeholder}>No ingredients yet</p>
+              )}
+              {transcript?.isExtractingIngredients && (
+                <p className={styles.status}>Extracting ingredients...</p>
+              )}
+              {transcript?.ingredients && (
+                <div className={styles.ingredientsList}>
+                  {transcript.ingredients.map(ingredient => (
+                    <label key={ingredient.name} className={styles.ingredientItem}>
+                      <input
+                        type="checkbox"
+                        checked={selectedIngredients.has(ingredient.name)}
+                        onChange={() => toggleIngredient(ingredient.name)}
+                      />
+                      <span className={styles.ingredientName}>
+                        {[
+                          ingredient.quantity,
+                          ingredient.unit,
+                          ingredient.name,
+                          ingredient.notes && `(${ingredient.notes})`
+                        ]
+                          .filter(Boolean)
+                          .join(' ')}
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         </div>

@@ -102,7 +102,7 @@ Here’s a breakdown of small, executable milestones to build SousChefAI iterati
 #### Milestone 5: Ingredient Extraction
 - **Goal:** Parse transcript and list ingredients.
 - **Tasks:**
-  - Write a simple parsing function (e.g., regex or NLP heuristic) to extract ingredients from the transcript.
+  - Use prompt engineering and OpenAI APIto extract ingredients from the transcript.
   - Display ingredients as a selectable checklist in the UI.
   - Handle edge cases (e.g., no ingredients found).
 - **Cursor Prompt:** “Create a function to extract ingredients from a transcript string using regex or basic NLP, and display them as a checkbox list in my React app.”

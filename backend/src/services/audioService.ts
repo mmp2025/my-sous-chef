@@ -7,20 +7,38 @@ export class AudioService {
   private static readonly TEMP_DIR = path.join(__dirname, '../../temp');
 
   static async initialize() {
-    // Ensure temp directory exists
     try {
-      await fs.access(this.TEMP_DIR);
-    } catch {
-      await fs.mkdir(this.TEMP_DIR, { recursive: true });
+      console.log('Initializing audio service...');
+      console.log('Temp directory path:', this.TEMP_DIR);
+      
+      try {
+        await fs.access(this.TEMP_DIR);
+        console.log('Temp directory exists');
+      } catch {
+        console.log('Creating temp directory...');
+        await fs.mkdir(this.TEMP_DIR, { recursive: true });
+        console.log('Temp directory created');
+      }
+
+      // Test write permissions
+      const testFile = path.join(this.TEMP_DIR, 'test.txt');
+      await fs.writeFile(testFile, 'test');
+      await fs.unlink(testFile);
+      console.log('Write permissions verified');
+    } catch (error) {
+      console.error('Audio service initialization error:', error);
+      throw error;
     }
   }
 
   static async extractAudio(videoId: string): Promise<string> {
     try {
+      console.log(`Starting audio extraction for video ${videoId}...`);
       const videoUrl = `https://www.youtube.com/watch?v=${videoId}`;
       const outputPath = path.join(this.TEMP_DIR, `${videoId}.mp3`);
 
       // Download audio using youtube-dl
+      console.log('Downloading audio...');
       await youtubeDl(videoUrl, {
         extractAudio: true,
         audioFormat: 'mp3',
@@ -34,6 +52,7 @@ export class AudioService {
         ]
       });
 
+      console.log('Audio extraction completed');
       return outputPath;
     } catch (error) {
       console.error('Audio extraction error:', error);

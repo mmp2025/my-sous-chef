@@ -75,4 +75,35 @@
   0% { opacity: 1; }
   50% { opacity: 0.7; }
   100% { opacity: 1; }
+}
+
+.ingredientsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.ingredientItem {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: #f5f5f5;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.ingredientItem:hover {
+  background: #eee;
+}
+
+.ingredientItem input[type="checkbox"] {
+  margin: 0;
+}
+
+.ingredientName {
+  font-size: 0.9rem;
+  color: #333;
 } 

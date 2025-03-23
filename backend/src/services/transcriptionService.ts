@@ -3,6 +3,16 @@ import { config } from '../config/config';
 import { TranscriptionResponse } from '../types/transcription';
 import { AudioService } from './audioService';
 import fs from 'fs';
+import { OpenAIService, Ingredient } from './openaiService';
+
+interface TranscriptionResponse {
+  status: 'queued' | 'processing' | 'completed' | 'error';
+  text: string;
+  error?: string;
+  id?: string;
+  ingredients?: Ingredient[];
+  isExtractingIngredients?: boolean;
+}
 
 export class TranscriptionService {
   private static readonly ASSEMBLY_AI_API_URL = 'https://api.assemblyai.com/v2';
@@ -68,6 +78,7 @@ export class TranscriptionService {
 
   static async getTranscriptionStatus(transcriptId: string): Promise<TranscriptionResponse> {
     try {
+      console.log(`Checking status for transcript ${transcriptId}...`);
       const response = await axios.get(
         `${this.ASSEMBLY_AI_API_URL}/transcript/${transcriptId}`,
         {
@@ -77,13 +88,42 @@ export class TranscriptionService {
         }
       );
 
+      const status = response.data.status;
+      const text = response.data.text || '';
+      console.log(`Transcription status: ${status}`);
+
+      // If transcription is complete, extract ingredients
+      let ingredients: Ingredient[] | undefined;
+      let isExtractingIngredients = false;
+
+      if (status === 'completed' && text) {
+        try {
+          console.log('Starting ingredient extraction...');
+          isExtractingIngredients = true;
+          ingredients = await OpenAIService.extractIngredients(text);
+          console.log('Ingredients extracted successfully:', ingredients);
+        } catch (error) {
+          if (error instanceof Error && error.message.includes('Rate limit')) {
+            throw error;
+          }
+          console.error('Ingredient extraction error:', error);
+        } finally {
+          isExtractingIngredients = false;
+        }
+      }
+
       return {
-        status: response.data.status,
-        text: response.data.text || '',
-        error: response.data.error
+        status,
+        text,
+        error: response.data.error,
+        ingredients,
+        isExtractingIngredients
       };
     } catch (error) {
       console.error('Status Check Error:', error);
+      if (error instanceof Error && error.message.includes('Rate limit')) {
+        throw new Error('Rate limit exceeded. Please try again in a minute.');
+      }
       throw new Error('Failed to check transcription status');
     }
   }
