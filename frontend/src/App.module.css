@@ -1,0 +1,40 @@
+.app {
+  min-height: 100vh;
+  background: #f9f8fd;
+}
+
+.main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.column {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.column h2 {
+  color: #333333;
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+}
+
+.content {
+  min-height: 300px;
+}
+
+.placeholder {
+  color: #666;
+  text-align: center;
+  margin-top: 2rem;
+} 

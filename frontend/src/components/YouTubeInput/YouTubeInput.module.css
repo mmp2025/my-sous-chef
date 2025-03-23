@@ -1,0 +1,71 @@
+.inputContainer {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+  display: flex;
+  gap: 1rem;
+}
+
+.input {
+  flex: 1;
+  padding: 1rem;
+  border: 2px solid #e1e1e1;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+
+.input:focus {
+  outline: none;
+  border-color: #ea4c89;
+}
+
+.button {
+  padding: 1rem 2rem;
+  background: #ea4c89;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.button:hover {
+  background: #f082ac;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.error {
+  color: #dc3545;
+  margin-top: 1rem;
+  text-align: center;
+}
+
+.videoDetails {
+  margin-top: 2rem;
+  padding: 1rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.thumbnail {
+  width: 100%;
+  max-width: 480px;
+  border-radius: 8px;
+  margin: 0 auto;
+  display: block;
+}
+
+.videoTitle {
+  margin-top: 1rem;
+  text-align: center;
+  color: #333;
+  font-size: 1.2rem;
+} 
