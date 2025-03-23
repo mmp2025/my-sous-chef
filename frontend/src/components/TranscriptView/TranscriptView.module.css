@@ -1,43 +1,17 @@
-.app {
-  min-height: 100vh;
-  background: #f9f8fd;
-}
-
-.main {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 2rem;
-}
-
-.columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
-}
-
-.column {
+.container {
   background: white;
   border-radius: 12px;
   padding: 1.5rem;
+  margin: 2rem 0;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  animation: slideIn 0.5s ease;
 }
 
-.column h2 {
-  color: #333333;
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
+.container h2 {
+  color: #333;
+  margin-bottom: 1.5rem;
   text-align: center;
-}
-
-.content {
-  min-height: 300px;
-}
-
-.placeholder {
-  color: #666;
-  text-align: center;
-  margin-top: 2rem;
+  font-size: 1.4rem;
 }
 
 .status {
@@ -71,8 +45,39 @@
   color: #444;
 }
 
+.transcriptText::-webkit-scrollbar {
+  width: 8px;
+}
+
+.transcriptText::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+.transcriptText::-webkit-scrollbar-thumb {
+  background: #ea4c89;
+  border-radius: 4px;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes pulse {
-  0% { opacity: 1; }
-  50% { opacity: 0.7; }
-  100% { opacity: 1; }
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+  }
 } 

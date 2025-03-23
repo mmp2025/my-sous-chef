@@ -11,6 +11,13 @@ dist/
 /build
 /dist
 
+# Temp files
+temp/
+*.mp3
+*.wav
+*.m4a
+*.ogg
+
 # IDE files
 .vscode/
 .idea/

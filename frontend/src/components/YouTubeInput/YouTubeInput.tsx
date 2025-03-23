@@ -7,7 +7,18 @@ interface VideoDetails {
   videoId: string;
 }
 
-const YouTubeInput: React.FC = () => {
+interface TranscriptionStatus {
+  status: 'queued' | 'processing' | 'completed' | 'error';
+  text: string;
+  error?: string;
+  id?: string;
+}
+
+interface YouTubeInputProps {
+  onTranscriptionUpdate: (status: TranscriptionStatus | null) => void;
+}
+
+const YouTubeInput: React.FC<YouTubeInputProps> = ({ onTranscriptionUpdate }) => {
   const [url, setUrl] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -19,16 +30,30 @@ const YouTubeInput: React.FC = () => {
     setError(null);
 
     try {
-      const response = await fetch(`http://localhost:5000/api/youtube/details?url=${encodeURIComponent(url)}`);
-      const data = await response.json();
+      // Get video details
+      const detailsResponse = await fetch(`http://localhost:5000/api/youtube/details?url=${encodeURIComponent(url)}`);
+      const detailsData = await detailsResponse.json();
 
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to fetch video details');
+      if (!detailsResponse.ok) {
+        throw new Error(detailsData.error || 'Failed to fetch video details');
       }
 
-      setVideoDetails(data);
+      setVideoDetails(detailsData);
+
+      // Start transcription
+      const transcribeResponse = await fetch(`http://localhost:5000/api/transcription/start?url=${encodeURIComponent(url)}`, {
+        method: 'POST'
+      });
+      const transcribeData = await transcribeResponse.json();
+
+      if (!transcribeResponse.ok) {
+        throw new Error(transcribeData.error || 'Failed to start transcription');
+      }
+
+      onTranscriptionUpdate(transcribeData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
+      onTranscriptionUpdate(null);
     } finally {
       setLoading(false);
     }
