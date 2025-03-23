@@ -1,23 +1,32 @@
-import { YouTubeVideoDetails } from '../types/youtube';
+import axios from 'axios';
 import { config } from '../config/config';
+import { VideoDetails } from '../types/youtube';
 
 export class YouTubeService {
-  static async getVideoDetails(url: string): Promise<YouTubeVideoDetails> {
-    const videoId = this.extractVideoId(url);
-    const apiUrl = `https://www.googleapis.com/youtube/v3/videos?part=snippet&id=${videoId}&key=${config.youtubeApiKey}`;
+  private static readonly API_URL = 'https://www.googleapis.com/youtube/v3';
 
+  static async getVideoDetails(url: string): Promise<VideoDetails> {
     try {
-      const response = await fetch(apiUrl);
-      const data = await response.json();
+      const videoId = this.extractVideoId(url);
+      
+      const response = await axios.get(`${this.API_URL}/videos`, {
+        params: {
+          part: 'snippet',
+          id: videoId,
+          key: config.youtubeApiKey
+        }
+      });
 
-      if (!data.items?.length) {
+      const video = response.data.items[0];
+      if (!video) {
         throw new Error('Video not found');
       }
 
       return {
-        title: data.items[0].snippet.title,
-        thumbnailUrl: data.items[0].snippet.thumbnails.high.url,
-        videoId,
+        title: video.snippet.title,
+        thumbnailUrl: video.snippet.thumbnails.medium.url,
+        videoId: videoId,
+        url: `https://www.youtube.com/watch?v=${videoId}`
       };
     } catch (error) {
       console.error('YouTube API Error:', error);
@@ -26,16 +35,25 @@ export class YouTubeService {
   }
 
   private static extractVideoId(url: string): string {
-    let match;
-    // Handle shorts URLs
-    if (url.includes('/shorts/')) {
-      match = url.match(/\/shorts\/([a-zA-Z0-9_-]{11})/);
-    } else {
-      // Handle regular videos
-      match = url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    try {
+      let videoId = '';
+      
+      // Handle shorts URL
+      if (url.includes('/shorts/')) {
+        videoId = url.split('/shorts/')[1].split('?')[0];
+      } else {
+        // Handle regular YouTube URL
+        const urlParams = new URL(url).searchParams;
+        videoId = urlParams.get('v') || '';
+      }
+
+      if (!videoId) {
+        throw new Error('Could not extract video ID');
+      }
+
+      return videoId;
+    } catch (error) {
+      throw new Error('Invalid YouTube URL');
     }
-    
-    if (!match) throw new Error('Could not extract video ID');
-    return match[1];
   }
 } 

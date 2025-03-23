@@ -1,11 +1,6 @@
 import React, { useState } from 'react';
 import styles from './YouTubeInput.module.css';
-
-interface VideoDetails {
-  title: string;
-  thumbnailUrl: string;
-  videoId: string;
-}
+import { VideoDetails } from '../../types/youtube';
 
 interface TranscriptionStatus {
   status: 'queued' | 'processing' | 'completed' | 'error';
@@ -16,9 +11,10 @@ interface TranscriptionStatus {
 
 interface YouTubeInputProps {
   onTranscriptionUpdate: (status: TranscriptionStatus | null) => void;
+  onVideoDetails: (details: VideoDetails | null) => void;
 }
 
-const YouTubeInput: React.FC<YouTubeInputProps> = ({ onTranscriptionUpdate }) => {
+const YouTubeInput: React.FC<YouTubeInputProps> = ({ onTranscriptionUpdate, onVideoDetails }) => {
   const [url, setUrl] = useState<string>('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -39,6 +35,7 @@ const YouTubeInput: React.FC<YouTubeInputProps> = ({ onTranscriptionUpdate }) =>
       }
 
       setVideoDetails(detailsData);
+      onVideoDetails(detailsData);
 
       // Start transcription
       const transcribeResponse = await fetch(`http://localhost:5000/api/transcription/start?url=${encodeURIComponent(url)}`, {

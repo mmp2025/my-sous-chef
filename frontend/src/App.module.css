@@ -106,4 +106,27 @@
 .ingredientName {
   font-size: 0.9rem;
   color: #333;
+}
+
+.shareButton {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 1rem auto;
+  padding: 0.75rem 1.5rem;
+  background: #25D366;  /* WhatsApp green */
+  color: white;
+  border: none;
+  border-radius: 24px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.shareButton:hover {
+  background: #128C7E;
+}
+
+.shareButton svg {
+  font-size: 1.2rem;
 } 

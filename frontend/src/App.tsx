@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import Header from './components/Header/Header';
 import YouTubeInput from './components/YouTubeInput/YouTubeInput';
+import { FaWhatsapp } from 'react-icons/fa';
 import styles from './App.module.css';
+import { VideoDetails } from './types/youtube';
 
 interface Ingredient {
   name: string;
@@ -22,6 +24,7 @@ interface TranscriptionStatus {
 const App: React.FC = () => {
   const [transcript, setTranscript] = useState<TranscriptionStatus | null>(null);
   const [selectedIngredients, setSelectedIngredients] = useState<Set<string>>(new Set());
+  const [videoDetails, setVideoDetails] = useState<VideoDetails | null>(null);
 
   // Poll for transcription status
   useEffect(() => {
@@ -65,11 +68,51 @@ const App: React.FC = () => {
     });
   };
 
+  const handleShare = () => {
+    if (!videoDetails || !transcript?.ingredients) return;
+
+    const selectedItems = transcript.ingredients.filter(
+      ingredient => selectedIngredients.has(ingredient.name)
+    );
+
+    if (selectedItems.length === 0) return;
+
+    const text = `
+${videoDetails.title}
+${videoDetails.url}
+
+Ingredients:
+${selectedItems.map(ingredient => {
+  const parts = [
+    ingredient.quantity,
+    ingredient.unit,
+    ingredient.name,
+    ingredient.notes && `(${ingredient.notes})`
+  ].filter(Boolean).join(' ');
+  return `• ${parts}`;
+}).join('\n')}
+    `.trim();
+
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(text)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  // Update the toggleIngredient function to select all by default
+  useEffect(() => {
+    if (transcript?.ingredients) {
+      const allIngredients = new Set(transcript.ingredients.map(i => i.name));
+      setSelectedIngredients(allIngredients);
+    }
+  }, [transcript?.ingredients]);
+
   return (
     <div className={styles.app}>
       <Header />
       <main className={styles.main}>
-        <YouTubeInput onTranscriptionUpdate={setTranscript} />
+        <YouTubeInput 
+          onTranscriptionUpdate={setTranscript} 
+          onVideoDetails={setVideoDetails}
+        />
         <div className={styles.columns}>
           <section className={styles.column}>
             <h2>Transcript</h2>
@@ -95,27 +138,39 @@ const App: React.FC = () => {
                 <p className={styles.status}>Extracting ingredients...</p>
               )}
               {transcript?.ingredients && (
-                <div className={styles.ingredientsList}>
-                  {transcript.ingredients.map(ingredient => (
-                    <label key={ingredient.name} className={styles.ingredientItem}>
-                      <input
-                        type="checkbox"
-                        checked={selectedIngredients.has(ingredient.name)}
-                        onChange={() => toggleIngredient(ingredient.name)}
-                      />
-                      <span className={styles.ingredientName}>
-                        {[
-                          ingredient.quantity,
-                          ingredient.unit,
-                          ingredient.name,
-                          ingredient.notes && `(${ingredient.notes})`
-                        ]
-                          .filter(Boolean)
-                          .join(' ')}
-                      </span>
-                    </label>
-                  ))}
-                </div>
+                <>
+                  <div className={styles.ingredientsList}>
+                    {transcript.ingredients.map(ingredient => (
+                      <label key={ingredient.name} className={styles.ingredientItem}>
+                        <input
+                          type="checkbox"
+                          checked={selectedIngredients.has(ingredient.name)}
+                          onChange={() => toggleIngredient(ingredient.name)}
+                        />
+                        <span className={styles.ingredientName}>
+                          {[
+                            ingredient.quantity,
+                            ingredient.unit,
+                            ingredient.name,
+                            ingredient.notes && `(${ingredient.notes})`
+                          ]
+                            .filter(Boolean)
+                            .join(' ')}
+                        </span>
+                      </label>
+                    ))}
+                  </div>
+                  {selectedIngredients.size > 0 && (
+                    <button 
+                      onClick={handleShare}
+                      className={styles.shareButton}
+                      aria-label="Share on WhatsApp"
+                    >
+                      <FaWhatsapp />
+                      Share
+                    </button>
+                  )}
+                </>
               )}
             </div>
           </section>
