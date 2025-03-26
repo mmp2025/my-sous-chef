@@ -120,4 +120,46 @@ export class OpenAIService {
       throw error;
     }
   }
+
+  static async answerQuestion(question: string, context: string): Promise<string> {
+    try {
+      await this.checkRateLimit();
+
+      const prompt = `
+        Based on this recipe transcript: "${context}"
+        
+        Please answer this question: "${question}"
+        
+        If the answer cannot be found in the recipe, use your cooking knowledge to provide a helpful response.
+        Keep the answer concise and friendly. If you're making assumptions, mention them.
+      `;
+
+      const response = await this.openai.chat.completions.create({
+        model: "gpt-4",
+        messages: [
+          {
+            role: "system",
+            content: "You are a helpful cooking assistant. Answer questions about recipes clearly and concisely."
+          },
+          {
+            role: "user",
+            content: prompt
+          }
+        ],
+        temperature: 0.7,
+        max_tokens: 200,
+      });
+
+      return response.choices[0]?.message?.content || 'Sorry, I could not generate an answer.';
+    } catch (error) {
+      if (error instanceof Error) {
+        if (error.message.includes('Rate limit')) {
+          throw error;
+        }
+        console.error('OpenAI QA Error:', error);
+        throw new Error('Failed to generate answer');
+      }
+      throw error;
+    }
+  }
 } 

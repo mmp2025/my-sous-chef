@@ -1,13 +1,46 @@
 .header {
   padding: 2rem;
-  background: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  background: linear-gradient(to right, #ffffff, #fdf8fa);
+  box-shadow: 0 2px 4px rgba(234, 76, 137, 0.1);
+  text-align: center;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+}
+
+.icon {
+  font-size: 2rem;
+  color: #ea4c89;
+  animation: float 3s ease-in-out infinite;
 }
 
 .title {
   color: #ea4c89;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: 700;
   margin: 0;
-  text-align: center;
+  font-family: 'Pacifico', cursive;
+}
+
+.tagline {
+  color: #666;
+  font-size: 1.1rem;
+  margin: 0.5rem 0 0;
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
 } 

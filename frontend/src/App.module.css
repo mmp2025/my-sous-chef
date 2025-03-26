@@ -6,14 +6,25 @@
 .main {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .columns {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2rem;
-  margin-top: 2rem;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Desktop layout */
+@media (min-width: 768px) {
+  .main {
+    padding: 2rem;
+  }
+  
+  .columns {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .column {
@@ -31,7 +42,7 @@
 }
 
 .content {
-  min-height: 300px;
+  min-height: unset;
 }
 
 .placeholder {
@@ -129,4 +140,266 @@
 
 .shareButton svg {
   font-size: 1.2rem;
+}
+
+.progressContainer {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.progressTitle {
+  text-align: center;
+  color: #ea4c89;
+  font-weight: 500;
+  margin-bottom: 1rem;
+  font-size: 1.1rem;
+}
+
+.progressBar {
+  background: #f5f5f5;
+  border-radius: 8px;
+  height: 6px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, #ea4c89, #f082ac);
+  animation: progress 2s infinite;
+  width: 30%;
+}
+
+.progressText {
+  text-align: center;
+  color: #666;
+  margin-top: 0.75rem;
+  font-size: 0.9rem;
+  animation: pulse 2s infinite;
+}
+
+.transcriptDetails {
+  background: white;
+  border-radius: 12px;
+  margin: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.transcriptSummary {
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  color: #ea4c89;
+  font-weight: 500;
+  user-select: none;
+}
+
+.transcriptSummary:hover {
+  background: #fdf8fa;
+}
+
+.transcriptContent {
+  padding: 0 1.5rem 1.5rem;
+}
+
+.ingredientsSection {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin: 1rem 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+@keyframes progress {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(400%); }
+}
+
+.widgetsContainer {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  opacity: 1;
+  transition: opacity 0.3s ease;
+}
+
+@media (min-width: 768px) {
+  .widgetsContainer {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Common styles for both widgets */
+.ingredientsSection,
+.askSection {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  min-height: 400px;  /* Set same minimum height */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Common heading styles */
+.ingredientsSection h2,
+.askSection h2 {
+  color: #333333;
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+/* Common content styles */
+.ingredientsSection .content,
+.askSection .content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.askSection {
+  background: white;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  min-height: 400px;
+}
+
+.askSection h2 {
+  color: #333333;
+  margin: 0 0 1rem 0;
+  font-size: 1.5rem;
+  text-align: center;
+}
+
+.askForm {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.askInput {
+  flex: 1;
+  padding: 0.75rem 1rem;
+  border: 2px solid #f0f0f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.askInput:focus {
+  outline: none;
+  border-color: #ea4c89;
+}
+
+.askButton {
+  padding: 0.75rem 1.5rem;
+  background: #ea4c89;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  min-width: 100px;
+}
+
+.askButton:hover:not(:disabled) {
+  background: #f082ac;
+}
+
+.askButton:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.answer {
+  background: #f9f8fd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-top: 1rem;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  animation: slideIn 0.3s ease;
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.answerIcon {
+  color: #ea4c89;
+  font-size: 1.2rem;
+  margin-top: 0.2rem;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.exampleQuestions {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: #f9f8fd;
+  border-radius: 8px;
+}
+
+.exampleTitle {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.exampleList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.exampleQuestion {
+  background: none;
+  border: 1px solid #ea4c89;
+  color: #ea4c89;
+  padding: 0.5rem 1rem;
+  border-radius: 16px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.exampleQuestion:hover:not(:disabled) {
+  background: #ea4c89;
+  color: white;
+}
+
+.exampleQuestion:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.description {
+  text-align: center;
+  color: #666;
+  font-size: 1.1rem;
+  margin-bottom: 0.5rem;
+  line-height: 1.5;
+  padding: 0 1rem;
+}
+
+/* Add style for share button description */
+.shareDescription {
+  text-align: center;
+  color: #666;
+  font-size: 0.85rem;
+  margin-top: 0.5rem;
 } 

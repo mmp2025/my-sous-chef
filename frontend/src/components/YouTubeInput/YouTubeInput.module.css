@@ -2,37 +2,43 @@
   width: 100%;
   max-width: 800px;
   margin: 0 auto;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .inputContainer {
   display: flex;
+  flex-direction: column;  /* Stack on mobile */
   gap: 1rem;
   margin-bottom: 2rem;
   background: white;
   padding: 1.5rem;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(234, 76, 137, 0.1);
-  transition: all 0.3s ease;
 }
 
-.inputContainer:focus-within {
-  box-shadow: 0 4px 12px rgba(234, 76, 137, 0.2);
-  transform: translateY(-2px);
+/* Desktop layout */
+@media (min-width: 768px) {
+  .container {
+    padding: 2rem;
+  }
+
+  .inputContainer {
+    flex-direction: row;
+  }
 }
 
 .input {
   flex: 1;
-  padding: 1rem 1.5rem;
+  padding: 1rem;
   border: 2px solid #f0f0f0;
   border-radius: 8px;
   font-size: 1rem;
   transition: all 0.3s ease;
 }
 
-.input:focus {
-  outline: none;
-  border-color: #ea4c89;
+.input::placeholder {
+  color: #999;
+  font-style: italic;
 }
 
 .button {
@@ -44,20 +50,29 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 140px;
   position: relative;
   overflow: hidden;
 }
 
-.button:hover {
+/* Loading state animation */
+.button[disabled] {
   background: #f082ac;
-  transform: translateY(-1px);
 }
 
-.button:disabled {
-  background: #f082ac;
-  cursor: not-allowed;
-  opacity: 0.7;
+.button[disabled]::after {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.5);
+  bottom: 0;
+  left: -100%;
+  animation: loading 1.5s infinite;
+}
+
+@keyframes loading {
+  0% { left: -100%; }
+  100% { left: 100%; }
 }
 
 .error {
